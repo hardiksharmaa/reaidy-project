@@ -4,6 +4,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import connectDB from './config/db.js';
+import authRoutes from './routes/auth.js';
 
 dotenv.config();
 connectDB();
@@ -15,6 +16,7 @@ app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(morgan("common"));
 app.use(cors());
+app.use('/auth', authRoutes);
 
 app.get('/', (req, res) => {
   res.status(200).json({ message: 'E-commerce API is running...' });
