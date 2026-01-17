@@ -11,6 +11,8 @@ import { setIsCartOpen } from "../../state";
 const Checkout = () => {
   const [activeStep, setActiveStep] = useState(0);
   const cart = useSelector((state) => state.auth.cart);
+  const token = useSelector((state) => state.auth.token); 
+  const user = useSelector((state) => state.auth.user);   
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const theme = useTheme();
@@ -29,14 +31,39 @@ const Checkout = () => {
     actions.setTouched({});
   };
 
-  const makePayment = (values) => {
-      console.log("Form Values:", values);
-      // Simulate API call
-      setTimeout(() => {
-          alert("Order Successfully Placed! (Mock)");
-          dispatch(setIsCartOpen({})); 
-          navigate("/"); 
-      }, 1000);
+  const makePayment = async (values) => {
+      try {
+        const requestBody = {
+            userId: user._id,
+            firstName: values.billingAddress.firstName,
+            lastName: values.billingAddress.lastName,
+            location: `${values.billingAddress.city}, ${values.billingAddress.state}, ${values.billingAddress.country}, ${values.billingAddress.zipCode}`,
+            products: cart,
+            totalAmount: cart.reduce((total, item) => total + Number(item.price), 0)
+        };
+
+        const response = await fetch(`${import.meta.env.VITE_BASE_URL}/orders`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify(requestBody)
+        });
+
+        if (response.ok) {
+            alert("Order Successfully Placed!");
+            dispatch(setIsCartOpen({})); 
+            navigate("/"); 
+        } else {
+            const errorData = await response.json();
+            alert(`Failed to create order: ${errorData.error || "Unknown error"}`);
+        }
+
+      } catch (error) {
+          console.log("Error placing order:", error);
+          alert("Something went wrong. Please try again.");
+      }
   };
 
   return (

@@ -6,6 +6,7 @@ import morgan from 'morgan';
 import connectDB from './config/db.js';
 import authRoutes from './routes/auth.js';
 import productRoutes from './routes/products.js';
+import orderRoutes from "./routes/orders.js";
 
 dotenv.config();
 connectDB();
@@ -19,6 +20,7 @@ app.use(morgan("common"));
 app.use(cors());
 app.use('/auth', authRoutes);
 app.use('/products', productRoutes);
+app.use("/orders", orderRoutes);
 
 app.get('/', (req, res) => {
   res.status(200).json({ message: 'E-commerce API is running...' });

@@ -16,11 +16,12 @@ import {
     TextField,
     Box,
     Chip,
-    Rating // Bonus: Adds a visual star rating (static for now)
+    Rating
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, setProducts } from "../../state";
 import { AddShoppingCart, Delete, Edit } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 const ProductWidget = ({
   _id,
@@ -31,15 +32,14 @@ const ProductWidget = ({
   imagePath,
 }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const theme = useTheme();
   const token = useSelector((state) => state.auth.token);
   const user = useSelector((state) => state.auth.user);
   
-  // Dialog States
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
 
-  // Edit Form States
   const [editName, setEditName] = useState(name);
   const [editPrice, setEditPrice] = useState(price);
   const [editCategory, setEditCategory] = useState(category);
@@ -47,11 +47,11 @@ const ProductWidget = ({
   const [editImage, setEditImage] = useState(imagePath);
   
   const isAdmin = user && user.role === "admin";
-  const neutralMain = theme.palette.neutral?.main;
   const primaryMain = theme.palette.primary.main;
 
   const addItem = () => {
-    dispatch(addToCart({ product: { _id, name, price } }));
+    // UPDATED: Include image in the cart payload
+    dispatch(addToCart({ product: { _id, name, price, image: imagePath } }));
   };
 
   const handleDelete = async () => {
@@ -99,22 +99,21 @@ const ProductWidget = ({
     <>
     <Card 
         sx={{
-            height: "100%", // Forces uniform height in grid
+            height: "100%",
             display: "flex", 
-            flexDirection: "column", // Pushes footer to bottom
+            flexDirection: "column",
             borderRadius: "16px",
             position: "relative",
             boxShadow: "0px 4px 12px rgba(0,0,0,0.05)",
             transition: "transform 0.3s, box-shadow 0.3s",
             "&:hover": {
-                transform: "translateY(-5px)", // Modern Lift Effect
+                transform: "translateY(-5px)",
                 boxShadow: "0px 12px 24px rgba(0,0,0,0.15)",
             },
             backgroundColor: theme.palette.background.alt,
         }}
     >
       
-      {/* ADMIN ACTIONS OVERLAY */}
       {isAdmin && (
           <Box 
             position="absolute"
@@ -136,8 +135,10 @@ const ProductWidget = ({
           </Box>
       )}
 
-      {/* IMAGE AREA */}
-      <Box sx={{ position: "relative", height: "200px", overflow: "hidden" }}>
+      <Box 
+        sx={{ position: "relative", height: "200px", overflow: "hidden", cursor: "pointer" }}
+        onClick={() => navigate(`/product/${_id}`)}
+      >
         <CardMedia
             component="img"
             height="200"
@@ -148,7 +149,6 @@ const ProductWidget = ({
                 filter: "brightness(0.95)",
             }}
         />
-        {/* Category Tag on Image */}
         <Chip 
             label={category} 
             size="small"
@@ -163,7 +163,6 @@ const ProductWidget = ({
         />
       </Box>
 
-      {/* CONTENT AREA */}
       <CardContent sx={{ flexGrow: 1, pb: 0 }}>
         <Box display="flex" justifyContent="space-between" alignItems="flex-start">
             <Typography 
@@ -174,8 +173,11 @@ const ProductWidget = ({
                     overflow: "hidden", 
                     textOverflow: "ellipsis", 
                     whiteSpace: "nowrap",
-                    maxWidth: "70%"
+                    maxWidth: "70%",
+                    cursor: "pointer",
+                    "&:hover": { color: theme.palette.primary.light }
                 }}
+                onClick={() => navigate(`/product/${_id}`)}
             >
             {name}
             </Typography>
@@ -184,10 +186,8 @@ const ProductWidget = ({
             </Typography>
         </Box>
 
-        {/* Dummy Rating for Visuals */}
         <Rating value={4.5} precision={0.5} readOnly size="small" sx={{ mb: 1 }} />
 
-        {/* Description with Line Clamp (Fixes height issues) */}
         <Typography 
             variant="body2" 
             color="text.secondary" 
@@ -195,8 +195,8 @@ const ProductWidget = ({
                 display: '-webkit-box',
                 overflow: 'hidden',
                 WebkitBoxOrient: 'vertical',
-                WebkitLineClamp: 3, // Limits to 3 lines max
-                height: "4.5em", // Fixed height for alignment
+                WebkitLineClamp: 3,
+                height: "4.5em",
                 lineHeight: "1.5em"
             }}
         >
@@ -204,7 +204,6 @@ const ProductWidget = ({
         </Typography>
       </CardContent>
 
-      {/* ACTION FOOTER */}
       <CardActions sx={{ p: 2, pt: 1 }}>
         <Button 
             variant="contained" 
@@ -229,7 +228,6 @@ const ProductWidget = ({
       </CardActions>
     </Card>
 
-    {/* --- DELETE CONFIRM DIALOG --- */}
     <Dialog open={openConfirm} onClose={() => setOpenConfirm(false)}>
         <DialogTitle fontWeight="bold">Delete Product</DialogTitle>
         <DialogContent>
@@ -243,7 +241,6 @@ const ProductWidget = ({
         </DialogActions>
     </Dialog>
 
-    {/* --- EDIT FORM DIALOG --- */}
     <Dialog open={openEdit} onClose={() => setOpenEdit(false)} fullWidth maxWidth="sm">
         <DialogTitle fontWeight="bold">Edit Product</DialogTitle>
         <DialogContent>

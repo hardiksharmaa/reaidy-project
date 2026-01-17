@@ -6,6 +6,8 @@ import LoginPage from "./scenes/loginPage";
 import HomePage from "./scenes/homePage"; 
 import CartMenu from "./scenes/global/CartMenu";
 import Checkout from "./scenes/checkout/Checkout";
+import ProductDetails from "./scenes/productDetails/ProductDetails";
+import OrdersPage from "./scenes/orders/OrdersPage";
 
 function App() {
   const theme = useMemo(() => createTheme({
@@ -30,7 +32,7 @@ function App() {
         light: "#F1F5F9"
       },
       background: {
-        default: "#ccced0",
+        default: "#f3f3f3",
         alt: "#FFFFFF" 
       },
       action: {
@@ -61,7 +63,9 @@ function App() {
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/" element={<HomePage />} />
+            <Route path="/product/:productId" element={<ProductDetails />} />
             <Route path="/checkout" element={<Checkout />} />
+            <Route path="/orders" element={<OrdersPage />} />
           </Routes>
         </ThemeProvider>
       </BrowserRouter>

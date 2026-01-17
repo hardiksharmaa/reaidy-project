@@ -11,9 +11,6 @@ const CategoryBar = () => {
     const theme = useTheme();
     const isNonMobile = useMediaQuery("(min-width: 600px)");
 
-    const neutralLight = theme.palette.neutral?.light || "#F0F0F0";
-
-    // Fetch categories from DB
     useEffect(() => {
         const fetchCategories = async () => {
             const response = await fetch(`${import.meta.env.VITE_BASE_URL}/products/categories`);
@@ -26,38 +23,39 @@ const CategoryBar = () => {
     return (
         <Box 
             width="100%" 
-            padding="1.5rem 6%" // Matches page padding
+            padding="1.5rem 6%" 
             bgcolor={theme.palette.background.default}
             display="flex"
-            flexDirection={isNonMobile ? "row" : "column"} // Stack on mobile, row on desktop
-            justifyContent="space-between" // Pushes Search to Left, Categories to Right
+            flexDirection={isNonMobile ? "row" : "column"} 
+            justifyContent="space-between" 
             alignItems="center"
             gap="1rem"
         >
-            {/* LEFT SIDE: SEARCH BAR */}
             <Box
-                backgroundColor={neutralLight}
-                borderRadius="9px"
-                padding="0.3rem 1.5rem"
+                backgroundColor="#ffffff" 
+                borderRadius="20px"      
+                border={`1px solid ${theme.palette.neutral?.medium || "#ccc"}`} Visible Border
+                padding="0.4rem 1.5rem"
                 display="flex" 
                 alignItems="center"
-                width={isNonMobile ? "300px" : "100%"} // Fixed width on desktop
+                width={isNonMobile ? "300px" : "100%"} 
+                boxShadow="0px 4px 12px rgba(0,0,0,0.08)"
             >
                 <InputBase 
                     placeholder="Search for products..." 
                     sx={{ width: "100%" }}
                     onChange={(e) => dispatch(setSearchQuery({ search: e.target.value }))}
                 />
-                <IconButton>
-                    <Search />
+                <IconButton type="button" sx={{ p: 1 }}>
+                    <Search sx={{ color: theme.palette.primary.main }} />
                 </IconButton>
             </Box>
 
-            {/* RIGHT SIDE: CATEGORIES */}
+
             <Box 
                 display="flex" 
                 flexWrap="wrap" 
-                justifyContent={isNonMobile ? "flex-end" : "center"} // Align right on desktop
+                justifyContent={isNonMobile ? "flex-end" : "center"} 
                 gap="0.5rem"
             >
                 {categories.map((cat) => (
@@ -67,17 +65,22 @@ const CategoryBar = () => {
                         onClick={() => dispatch(setSelectedCategory(cat === "All" ? null : cat))}
                         sx={{
                             fontSize: "14px",
-                            padding: "10px",
+                            fontWeight: "500",
+                            padding: "8px 5px",
                             cursor: "pointer",
                             backgroundColor: selectedCategory === cat || (cat === "All" && !selectedCategory)
                                 ? theme.palette.primary.main 
-                                : theme.palette.background.alt,
+                                : "#ffffff",
+                            border: selectedCategory === cat 
+                                ? "none" 
+                                : `1px solid ${theme.palette.neutral.medium}`, 
                             color: selectedCategory === cat || (cat === "All" && !selectedCategory)
                                 ? "white" 
                                 : theme.palette.neutral.dark,
                             "&:hover": {
                                 backgroundColor: theme.palette.primary.light,
-                                color: "white"
+                                color: "white",
+                                border: "1px solid transparent"
                             },
                             transition: "all 0.3s ease"
                         }}

@@ -8,14 +8,16 @@ import {
   useTheme,
   useMediaQuery,
   Badge,
-  Button
+  Button,
+  Divider 
 } from "@mui/material";
 import {
   Menu as MenuIcon, 
   Close,
   ShoppingBag,
   Person,       
-  ArrowDropDown    
+  ArrowDropDown,
+  ReceiptLong
 } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { setLogout, setIsCartOpen } from "../../state";
@@ -62,7 +64,7 @@ const Navbar = () => {
       <Box display="flex" alignItems="center" gap="1.75rem">
         <Typography
           fontWeight="bold"
-          fontSize="clamp(1rem, 2rem, 2.25rem)"
+          fontSize="clamp(1rem, 1.5rem, 1.5rem)"
           color="primary"
           onClick={() => navigate("/")}
           sx={{
@@ -113,7 +115,7 @@ const Navbar = () => {
                     <ArrowDropDown sx={{ color: "text.secondary" }} />
                 </Button>
 
-                {/* DROPDOWN MENU */}
+
                 <Menu
                     anchorEl={anchorEl}
                     open={isOpen}
@@ -123,12 +125,27 @@ const Navbar = () => {
                     sx={{
                         "& .MuiPaper-root": {
                             marginTop: "10px",
-                            minWidth: "150px",
+                            minWidth: "180px",
                             boxShadow: "0px 10px 30px rgba(0,0,0,0.1)"
                         }
                     }}
                 >
-                    <MenuItem onClick={handleLogout} sx={{ fontWeight: "bold" }}>
+ 
+                    <MenuItem 
+                        onClick={() => {
+                            handleClose();
+                            navigate("/orders");
+                        }} 
+                        sx={{ gap: "10px" }}
+                    >
+                        <ReceiptLong fontSize="small" />
+                        My Orders
+                    </MenuItem>
+                    
+                    <Divider />
+
+                    <MenuItem onClick={handleLogout} sx={{ fontWeight: "bold", gap: "10px" }}>
+                        <Close fontSize="small" />
                         Log Out
                     </MenuItem>
                 </Menu>
@@ -157,7 +174,7 @@ const Navbar = () => {
         </IconButton>
       )}
 
-      {/* MOBILE MENU */}
+  
       {!isNonMobileScreens && isMobileMenuToggled && (
         <Box
             position="fixed"
@@ -183,10 +200,23 @@ const Navbar = () => {
             </IconButton>
             
             {user ? (
-                <Box textAlign="center">
-                    <Typography fontWeight="bold" variant="h4" mb={2}>
+                <Box textAlign="center" display="flex" flexDirection="column" gap={2}>
+                    <Typography fontWeight="bold" variant="h4" mb={1}>
                         {fullName}
                     </Typography>
+                    
+                     <Button 
+                        onClick={() => {
+                            navigate("/orders");
+                            setIsMobileMenuToggled(false);
+                        }}
+                        variant="text" 
+                        color="primary"
+                        startIcon={<ReceiptLong />}
+                    >
+                        My Orders
+                    </Button>
+
                     <Button 
                         onClick={() => {
                             dispatch(setLogout()); 
