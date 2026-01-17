@@ -65,7 +65,7 @@ const CartMenu = () => {
             </Box>
           ))}
           {cart.length === 0 && (
-             <Typography color="gray" fontStyle="italic">Your cart is empty...</Typography>
+             <Typography color="black" fontStyle="italic">Your cart is empty...</Typography>
           )}
         </Box>
 

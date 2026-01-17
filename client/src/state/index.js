@@ -6,6 +6,8 @@ const initialState = {
   cart: [],
   products: [],
   isCartOpen: false,
+  searchQuery: "",
+  selectedCategory: null,
 };
 
 export const authSlice = createSlice({
@@ -20,6 +22,7 @@ export const authSlice = createSlice({
       state.user = null;
       state.token = null;
       state.cart = [];
+      state.searchQuery = "";
     },
     setProducts: (state, action) => {
       state.products = action.payload.products;
@@ -30,8 +33,14 @@ export const authSlice = createSlice({
     removeFromCart: (state, action) => {
       state.cart = state.cart.filter((item) => item._id !== action.payload.id);
     },
-    setIsCartOpen: (state) => { 
+    setIsCartOpen: (state) => {
       state.isCartOpen = !state.isCartOpen;
+    },
+    setSearchQuery: (state, action) => { 
+      state.searchQuery = action.payload.search;
+    },
+    setSelectedCategory: (state, action) => {
+        state.selectedCategory = action.payload;
     }
   },
 });
@@ -42,7 +51,9 @@ export const {
     setProducts, 
     addToCart, 
     removeFromCart, 
-    setIsCartOpen 
+    setIsCartOpen,
+    setSearchQuery ,
+    setSelectedCategory
 } = authSlice.actions;
 
 export default authSlice.reducer;

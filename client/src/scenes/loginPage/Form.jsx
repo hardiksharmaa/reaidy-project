@@ -155,7 +155,7 @@ const Form = () => {
                 p: "1rem",
                 backgroundColor: palette.primary.main,
                 color: palette.background.alt,
-                "&:hover": { color: palette.primary.main },
+        
               }}
             >
               {isLogin ? "LOGIN" : "REGISTER"}

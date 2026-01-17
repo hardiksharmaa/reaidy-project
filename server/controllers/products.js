@@ -59,3 +59,29 @@ export const deleteProduct = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 }
+
+export const updateProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, description, price, category, image } = req.body;
+
+    const updatedProduct = await Product.findByIdAndUpdate(
+      id,
+      { name, description, price, category, image },
+      { new: true } 
+    );
+
+    res.status(200).json(updatedProduct);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
+
+export const getProductCategories = async (req, res) => {
+    try {
+        const categories = await Product.distinct("category");
+        res.status(200).json(categories);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}

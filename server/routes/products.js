@@ -3,16 +3,20 @@ import {
     getProducts, 
     getProductById, 
     createProduct,
-    deleteProduct 
+    deleteProduct,
+    updateProduct,
+    getProductCategories
 } from '../controllers/products.js';
-import { verifyToken } from '../middleware/auth.js';
+import { verifyToken, verifyAdmin } from '../middleware/auth.js';
 
 const router = express.Router();
 
+router.get('/categories', getProductCategories);
 router.get('/', getProducts);
 router.get('/:id', getProductById);
 
-router.post('/', verifyToken, createProduct); 
-router.delete('/:id', verifyToken, deleteProduct); 
+router.post('/', verifyToken, verifyAdmin, createProduct);
+router.put('/:id', verifyToken, verifyAdmin, updateProduct);
+router.delete('/:id', verifyToken, verifyAdmin, deleteProduct);
 
 export default router;
