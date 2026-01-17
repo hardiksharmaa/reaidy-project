@@ -37,25 +37,27 @@ const Hero = () => {
             sx={{ 
                 mb: 2,
                 color: "#ffffff",
-                fontSize: isNonMobileScreens ? "4.5rem" : "3rem",
+                fontSize: isNonMobileScreens ? "4.5rem" : "2.8rem",
                 fontWeight: "600", 
-                fontFamily: "'Inter', sans-serif",
-                letterSpacing: "4px",
-                textShadow: "0px 4px 12px rgba(0,0,0,0.4)"
+                fontFamily: "'Cinzel', serif", 
+                letterSpacing: "6px",         
+                textTransform: "uppercase",
+                textShadow: "0px 4px 12px rgba(0,0,0,0.6)"
             }}
         >
-          WINTER COLLECTION IS HERE
+          REAIDY FOR THE ELEMENTS
         </Typography>
         
         <Typography 
-            variant="h4" 
+            variant="h3" 
             sx={{ 
                 mb: 5, 
-                fontWeight: "300", 
-                color: "#f1f5f9", 
-                fontSize: isNonMobileScreens ? "1.4rem" : "1rem",
-                letterSpacing: "1px",
-                fontFamily: "'Inter', sans-serif"
+                fontWeight: "600", 
+                color: "#e2e8f0", 
+                fontSize: isNonMobileScreens ? "1.0rem" : "0.9rem",
+                letterSpacing: "2px",
+                fontFamily: "'Cinzel', serif", 
+                textTransform: "uppercase",
             }}
         >
           Discover the latest trends in luxury fashion and modern technology.
@@ -65,15 +67,17 @@ const Hero = () => {
             variant="contained" 
             size="large"
             sx={{
-                borderRadius: "20px",
+                borderRadius: "15px", 
                 padding: "16px 30px",
-                fontSize: "15px",
+                fontSize: "14px",
                 backgroundColor: theme.palette.secondary.main,
                 color: "#ffffff",
-                fontWeight: "700",
-                letterSpacing: "2px",
+                fontWeight: "600",
+                letterSpacing: "3px",
+                fontFamily: "'Cinzel', serif",
                 boxShadow: "0px 10px 25px rgba(0,0,0,0.15)",
                 textTransform: "uppercase",
+                border: "1px solid rgba(255,255,255,0.2)", 
                 "&:hover": { 
                     backgroundColor: theme.palette.secondary.dark,
                     transform: "translateY(-2px)",

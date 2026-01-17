@@ -7,6 +7,7 @@ import Shipping from "./Shipping";
 import Payment from "./Payment";
 import { useNavigate } from "react-router-dom";
 import { setIsCartOpen } from "../../state";
+import { toast } from "react-toastify"; 
 
 const Checkout = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -52,17 +53,30 @@ const Checkout = () => {
         });
 
         if (response.ok) {
-            alert("Order Successfully Placed!");
+            toast.success("Order placed successfully! Redirecting...", {
+                position: "bottom-left",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                theme: "light",
+            });
+            
             dispatch(setIsCartOpen({})); 
             navigate("/"); 
         } else {
             const errorData = await response.json();
-            alert(`Failed to create order: ${errorData.error || "Unknown error"}`);
+            toast.error(`Failed to create order: ${errorData.error || "Unknown error"}`, {
+                position: "bottom-left"
+            });
         }
 
       } catch (error) {
           console.log("Error placing order:", error);
-          alert("Something went wrong. Please try again.");
+          toast.error("Something went wrong. Please try again.", {
+             position: "bottom-left"
+          });
       }
   };
 

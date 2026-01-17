@@ -1,4 +1,5 @@
 import { Box, Typography, useTheme, Container, Paper, Chip, Divider, CircularProgress, Button } from "@mui/material";
+import { ArrowBack } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -11,12 +12,9 @@ const OrdersPage = () => {
   const theme = useTheme();
   const navigate = useNavigate();
 
-  // --- FIX: IMAGE URL HELPER ---
   const getImageUrl = (image) => {
     if (!image) return "https://via.placeholder.com/50";
-    // If it's already a full web URL (http...), use it
     if (image.startsWith("http")) return image;
-    // If it's a relative path, force it to start with / so it loads from root
     return `/${image.startsWith("/") ? image.slice(1) : image}`;
   };
 
@@ -51,8 +49,17 @@ const OrdersPage = () => {
   return (
     <Box minHeight="100vh" backgroundColor={theme.palette.background.default} py={4}>
       <Container maxWidth="md">
+        
+        <Button 
+            startIcon={<ArrowBack />} 
+            onClick={() => navigate("/")}
+            sx={{ mb: 2, color: theme.palette.neutral.dark, fontWeight: "bold" }}
+        >
+            Back to Home
+        </Button>
+
         <Typography variant="h2" fontWeight="bold" mb={4} textAlign="center">
-          My Order History
+          ORDER HISTORY
         </Typography>
 
         {!orders || orders.length === 0 ? (
@@ -96,7 +103,6 @@ const OrdersPage = () => {
                             <Box key={`${order._id}-${i}`} display="flex" justifyContent="space-between" alignItems="center" mb={1}>
                                 <Box display="flex" alignItems="center" gap={2}>
                                     
-                                    {/* USE THE HELPER FUNCTION HERE */}
                                     <Box 
                                         component="img" 
                                         src={getImageUrl(item.image)} 
@@ -106,9 +112,9 @@ const OrdersPage = () => {
                                             height: 50, 
                                             objectFit: "cover", 
                                             borderRadius: "5px",
-                                            backgroundColor: "#eee" // Fallback color
+                                            backgroundColor: "#eee" 
                                         }}
-                                        onError={(e) => { e.target.src = "https://via.placeholder.com/50" }} // Final safety net
+                                        onError={(e) => { e.target.src = "https://via.placeholder.com/50" }} 
                                     />
                                     
                                     <Box>

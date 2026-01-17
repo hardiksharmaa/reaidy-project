@@ -66,7 +66,7 @@ const CategoryBar = () => {
                         sx={{
                             fontSize: "14px",
                             fontWeight: "500",
-                            padding: "8px 5px",
+                            padding: "22px 10px",
                             cursor: "pointer",
                             backgroundColor: selectedCategory === cat || (cat === "All" && !selectedCategory)
                                 ? theme.palette.primary.main 

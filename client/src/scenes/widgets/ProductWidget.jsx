@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToCart, setProducts } from "../../state";
 import { AddShoppingCart, Delete, Edit } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify"; 
 
 const ProductWidget = ({
   _id,
@@ -49,9 +50,20 @@ const ProductWidget = ({
   const isAdmin = user && user.role === "admin";
   const primaryMain = theme.palette.primary.main;
 
-  const addItem = () => {
-    // UPDATED: Include image in the cart payload
+  const addItem = (e) => {
+    e.stopPropagation(); 
     dispatch(addToCart({ product: { _id, name, price, image: imagePath } }));
+    
+    toast.success(`${name} added to cart!`, {
+        position: "bottom-left",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+    });
   };
 
   const handleDelete = async () => {
@@ -83,7 +95,7 @@ const ProductWidget = ({
         refreshProducts();
         setOpenEdit(false);
     } else {
-        alert("Update failed.");
+        toast.error("Failed to update product."); // Error toast
     }
   };
 

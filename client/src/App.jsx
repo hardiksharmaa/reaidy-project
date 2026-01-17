@@ -4,10 +4,13 @@ import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import LoginPage from "./scenes/loginPage";
 import HomePage from "./scenes/homePage"; 
-import CartMenu from "./scenes/global/CartMenu";
+import CartMenu from "./scenes/global/CartMenu"; 
 import Checkout from "./scenes/checkout/Checkout";
 import ProductDetails from "./scenes/productDetails/ProductDetails";
 import OrdersPage from "./scenes/orders/OrdersPage";
+
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const theme = useMemo(() => createTheme({
@@ -32,7 +35,7 @@ function App() {
         light: "#F1F5F9"
       },
       background: {
-        default: "#f3f3f3",
+        default: "#f6f6f6",
         alt: "#FFFFFF" 
       },
       action: {
@@ -58,14 +61,28 @@ function App() {
       <BrowserRouter>
         <ThemeProvider theme={theme}>
           <CssBaseline />
+          
+          <ToastContainer 
+            position="bottom-left" 
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="colored"
+          />
+
           <CartMenu />
 
           <Routes>
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/" element={<HomePage />} />
-            <Route path="/product/:productId" element={<ProductDetails />} />
             <Route path="/checkout" element={<Checkout />} />
+            <Route path="/product/:productId" element={<ProductDetails />} />
             <Route path="/orders" element={<OrdersPage />} />
+            <Route path="/" element={<HomePage />} />
           </Routes>
         </ThemeProvider>
       </BrowserRouter>

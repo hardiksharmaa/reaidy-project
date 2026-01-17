@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import { addToCart } from "../../state";
+import { toast } from "react-toastify"; 
 
 const ProductDetails = () => {
   const { productId } = useParams();
@@ -37,6 +38,20 @@ const ProductDetails = () => {
   );
 
   if (!product) return <Typography>Product not found</Typography>;
+
+  const handleAddToCart = () => {
+      dispatch(addToCart({ product }));
+      toast.success(`${product.name} added to cart!`, {
+        position: "bottom-left",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+  };
 
   return (
     <Box width="100%" minHeight="100vh" py="40px" backgroundColor={theme.palette.background.default}>
@@ -73,7 +88,7 @@ const ProductDetails = () => {
                     sx={{ 
                         mb: 2, 
                         backgroundColor: theme.palette.primary.light, 
-                        color: "white",
+                        color:"white",
                         fontWeight: "bold"
                     }} 
                 />
@@ -94,7 +109,7 @@ const ProductDetails = () => {
                 variant="contained"
                 size="large"
                 startIcon={<AddShoppingCart />}
-                onClick={() => dispatch(addToCart({ product }))}
+                onClick={handleAddToCart}
                 sx={{
                     borderRadius: "30px",
                     padding: "15px 40px",
@@ -114,7 +129,6 @@ const ProductDetails = () => {
                 </Button>
             </Box>
 
-            {/* ADDITIONAL INFO (Static) */}
             <Box mt={4} p={3} bgcolor="white" borderRadius="12px" border={`1px solid ${theme.palette.neutral.light}`}>
                 <Typography variant="h6" fontWeight="bold" mb={1}>Product Highlights</Typography>
                 <ul style={{ paddingLeft: "20px", color: theme.palette.neutral.main }}>

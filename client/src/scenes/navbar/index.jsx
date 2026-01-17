@@ -9,7 +9,8 @@ import {
   useMediaQuery,
   Badge,
   Button,
-  Divider 
+  Divider,
+  keyframes 
 } from "@mui/material";
 import {
   Menu as MenuIcon, 
@@ -22,6 +23,11 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { setLogout, setIsCartOpen } from "../../state";
 import { useNavigate } from "react-router-dom";
+
+const scrollAnimation = keyframes`
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+`;
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
@@ -54,33 +60,67 @@ const Navbar = () => {
         display="flex" 
         justifyContent="space-between" 
         alignItems="center" 
-        padding="1rem 6%" 
+        padding="0.5rem 6%"
         backgroundColor={alt}
         position="sticky"
         top="0"
         zIndex="100"
         boxShadow="0px 2px 10px rgba(0,0,0,0.05)"
+        height="60px"
     >
-      <Box display="flex" alignItems="center" gap="1.75rem">
+    
+      <Box display="flex" alignItems="center" flexShrink={0}>
         <Typography
           fontWeight="bold"
           fontSize="clamp(1rem, 1.5rem, 1.5rem)"
-          color="primary"
+          color="#2666be"
           onClick={() => navigate("/")}
           sx={{
             "&:hover": {
-              color: theme.palette.primary.light,
+              color: "#6f9fe3",
               cursor: "pointer",
             },
-            transition: "color 0.3s"
+            transition: "color 0.3s",
+            whiteSpace: "nowrap"
           }}
         >
-          E-CommStore
+          ReaidyStore
         </Typography>
       </Box>
 
+      {user && isNonMobileScreens && (
+        <Box 
+            sx={{
+                flexGrow: 1,
+                overflow: "hidden",
+                mx: 4, 
+                position: "relative",
+                height: "24px", 
+                display: "flex",
+                alignItems: "center",
+                backgroundColor: "#f0f4ff", 
+                borderRadius: "12px",
+                border: "1px solid #e0e7ff"
+            }}
+        >
+            <Box
+                sx={{
+                    display: "inline-block",
+                    whiteSpace: "nowrap",
+                    animation: `${scrollAnimation} 20s linear infinite`,
+                    color: theme.palette.primary.main,
+                    fontWeight: "600",
+                    fontSize: "15px",
+                    letterSpacing: "1px"
+                }}
+            >
+                🔥 WINTER SALE IS LIVE! GET 50% OFF ON ALL JACKETS • FREE SHIPPING ON ORDERS OVER $100 • NEW ARRIVALS DROPPED TODAY! 🔥 &nbsp;&nbsp;&nbsp;&nbsp; 🔥 WINTER SALE IS LIVE! GET 50% OFF ON ALL JACKETS • FREE SHIPPING ON ORDERS OVER $100 • NEW ARRIVALS DROPPED TODAY! 🔥
+            </Box>
+        </Box>
+      )}
+
       {isNonMobileScreens ? (
-        <Box display="flex" gap="2rem" alignItems="center">
+        <Box display="flex" gap="2rem" alignItems="center" flexShrink={0}>
             <IconButton onClick={() => dispatch(setIsCartOpen({}))} sx={{ color: "black" }}>
                 <Badge badgeContent={cart ? cart.length : 0} color="secondary">
                     <ShoppingBag sx={{ fontSize: "25px" }} />
@@ -97,24 +137,23 @@ const Navbar = () => {
                         gap: "10px",
                         textTransform: "none",
                         backgroundColor: "#f5f5f5", 
-                        padding: "6px 15px",
+                        padding: "4px 12px", 
                         borderRadius: "30px",       
                         border: "1px solid transparent",
                         "&:hover": {
                              backgroundColor: "white",
                              border: `1px solid ${theme.palette.primary.main}`,
-                             boxShadow: "0px 4px 10px rgba(0,0,0,0.1)"
+                             boxShadow: "0px 4px 10px rgba(0,0,0,0.05)"
                         },
                         transition: "all 0.3s ease"
                     }}
                 >
-                    <Person sx={{ color: theme.palette.primary.main }} />
-                    <Typography fontWeight="bold" fontSize="14px" color="text.primary">
+                    <Person sx={{ color: theme.palette.primary.main, fontSize: "20px" }} />
+                    <Typography fontWeight="bold" fontSize="13px" color="text.primary">
                         {fullName}
                     </Typography>
                     <ArrowDropDown sx={{ color: "text.secondary" }} />
                 </Button>
-
 
                 <Menu
                     anchorEl={anchorEl}
@@ -124,19 +163,18 @@ const Navbar = () => {
                     transformOrigin={{ vertical: "top", horizontal: "right" }}
                     sx={{
                         "& .MuiPaper-root": {
-                            marginTop: "10px",
-                            minWidth: "180px",
-                            boxShadow: "0px 10px 30px rgba(0,0,0,0.1)"
+                            marginTop: "5px",
+                            minWidth: "160px",
+                            boxShadow: "0px 5px 15px rgba(0,0,0,0.1)"
                         }
                     }}
                 >
- 
                     <MenuItem 
                         onClick={() => {
                             handleClose();
                             navigate("/orders");
                         }} 
-                        sx={{ gap: "10px" }}
+                        sx={{ gap: "10px", fontSize: "13px" }}
                     >
                         <ReceiptLong fontSize="small" />
                         My Orders
@@ -144,7 +182,7 @@ const Navbar = () => {
                     
                     <Divider />
 
-                    <MenuItem onClick={handleLogout} sx={{ fontWeight: "bold", gap: "10px" }}>
+                    <MenuItem onClick={handleLogout} sx={{ fontWeight: "bold", gap: "10px", fontSize: "13px" }}>
                         <Close fontSize="small" />
                         Log Out
                     </MenuItem>
@@ -159,7 +197,8 @@ const Navbar = () => {
                     color: "white",
                     fontWeight: "bold",
                     borderRadius: "20px",
-                    padding: "8px 25px"
+                    padding: "6px 20px",
+                    fontSize: "13px"
                 }}
               >
                   SIGN IN
@@ -174,7 +213,6 @@ const Navbar = () => {
         </IconButton>
       )}
 
-  
       {!isNonMobileScreens && isMobileMenuToggled && (
         <Box
             position="fixed"
