@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import LoginPage from "./scenes/loginPage";
 import HomePage from "./scenes/homePage"; 
 import CartMenu from "./scenes/global/CartMenu";
+import Checkout from "./scenes/checkout/Checkout";
 
 function App() {
   const theme = useMemo(() => createTheme({
@@ -60,6 +61,7 @@ function App() {
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/" element={<HomePage />} />
+            <Route path="/checkout" element={<Checkout />} />
           </Routes>
         </ThemeProvider>
       </BrowserRouter>
