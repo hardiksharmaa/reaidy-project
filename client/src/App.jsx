@@ -8,7 +8,7 @@ import CartMenu from "./scenes/global/CartMenu";
 import Checkout from "./scenes/checkout/Checkout";
 import ProductDetails from "./scenes/productDetails/ProductDetails";
 import OrdersPage from "./scenes/orders/OrdersPage";
-
+import Footer from "./scenes/global/Footer";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -84,6 +84,7 @@ function App() {
             <Route path="/orders" element={<OrdersPage />} />
             <Route path="/" element={<HomePage />} />
           </Routes>
+          <Footer />
         </ThemeProvider>
       </BrowserRouter>
     </div>
