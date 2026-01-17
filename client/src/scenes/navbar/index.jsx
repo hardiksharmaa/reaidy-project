@@ -73,11 +73,11 @@ const Navbar = () => {
         <Typography
           fontWeight="bold"
           fontSize="clamp(1rem, 1.5rem, 1.5rem)"
-          color="#2666be"
+          color="#1A237E"
           onClick={() => navigate("/")}
           sx={{
             "&:hover": {
-              color: "#6f9fe3",
+              color: "#558fdf",
               cursor: "pointer",
             },
             transition: "color 0.3s",

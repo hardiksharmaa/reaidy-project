@@ -1,32 +1,48 @@
 import {
   Box,
-  Divider,
-  Typography,
-  useTheme,
   Button,
   TextField,
-  useMediaQuery,
-  Paper
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  useTheme
 } from "@mui/material";
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setProducts } from "../../state";
-import { AddCircleOutline } from "@mui/icons-material";
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 
-const MyPostWidget = () => {
-  const dispatch = useDispatch();
+const MyPostWidget = ({ open, onClose, onProductUpdated, productToEdit }) => {
   const { palette } = useTheme();
   const token = useSelector((state) => state.auth.token);
-  const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
   
-  // Local state
+  // State for form fields
   const [productName, setProductName] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState("");
 
-  const handlePost = async () => {
+  useEffect(() => {
+    if (open) { 
+        if (productToEdit) {
+          
+            setProductName(productToEdit.name || "");
+            setPrice(productToEdit.price || "");
+            setCategory(productToEdit.category || "");
+            setDescription(productToEdit.description || "");
+            setImage(productToEdit.image || "");
+        } else {
+
+            setProductName("");
+            setPrice("");
+            setCategory("");
+            setDescription("");
+            setImage("");
+        }
+    }
+  }, [open, productToEdit]);
+
+  const handleSubmit = async () => {
     const formData = {
         name: productName,
         price: Number(price),
@@ -34,120 +50,103 @@ const MyPostWidget = () => {
         description: description,
         image: image,
         countInStock: 10 
+    };
+
+    let url = `${import.meta.env.VITE_BASE_URL}/products`;
+    let method = "POST";
+
+    if (productToEdit) {
+        url = `${import.meta.env.VITE_BASE_URL}/products/${productToEdit._id}`;
+        method = "PUT";
     }
 
-    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/products`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
-    
-    const savedProduct = await response.json();
+    try {
+        const response = await fetch(url, {
+            method: method,
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+        });
+        
+        const data = await response.json();
 
-    if (response.ok) {
-        alert("Product Added Successfully!");
-        setProductName("");
-        setPrice("");
-        setCategory("");
-        setDescription("");
-        setImage("");
-        window.location.reload(); 
-    } else {
-        alert("Failed to add product: " + savedProduct.message);
+        if (response.ok) {
+            onClose(); // Close modal
+            if(onProductUpdated) onProductUpdated();
+            alert(productToEdit ? "Product Updated!" : "Product Added!");
+        } else {
+            alert(`Failed to ${productToEdit ? "update" : "add"} product: ` + (data.message || data.error));
+        }
+    } catch (err) {
+        console.log("Error:", err);
+        alert("Something went wrong.");
     }
   };
 
   return (
-    <Paper
-      elevation={3} 
-      sx={{
-        padding: "2rem",
-        backgroundColor: palette.background.alt,
-        borderRadius: "0.75rem",
-        margin: "2rem auto", 
-        maxWidth: isNonMobileScreens ? "600px" : "100%", 
-      }}
-    >
-      <Box display="flex" alignItems="center" gap="1rem" mb="1.5rem">
-        <AddCircleOutline sx={{ fontSize: "30px", color: "#1A237E" }} />
-        <Typography variant="h5" fontWeight="bold" color="text.primary">
-          Add New Product
-        </Typography>
-      </Box>
-
-      <Box display="flex" flexDirection="column" gap="1.5rem">
-        <TextField 
-            label="Product Name" 
-            variant="outlined"
-            fullWidth
-            onChange={(e) => setProductName(e.target.value)}
-            value={productName}
-        />
-        
-        <Box display="flex" gap="1rem">
-             <TextField 
-                label="Category" 
-                variant="outlined"
-                fullWidth
-                onChange={(e) => setCategory(e.target.value)}
-                value={category}
-            />
-            <TextField 
-                label="Price ($)" 
-                type="number"
-                variant="outlined"
-                fullWidth
-                onChange={(e) => setPrice(e.target.value)}
-                value={price}
-            />
-        </Box>
-
-        <TextField 
-            label="Image URL" 
-            variant="outlined"
-            fullWidth
-            onChange={(e) => setImage(e.target.value)}
-            value={image}
-            helperText="Paste a valid image link"
-        />
-
-        <TextField 
-            label="Description"
-            multiline
-            rows={4}
-            variant="outlined"
-            fullWidth
-            onChange={(e) => setDescription(e.target.value)}
-            value={description}
-        />
-      </Box>
-
-      <Divider sx={{ margin: "2rem 0" }} />
-
-      <Button
-        fullWidth
-        onClick={handlePost}
-        disabled={!productName || !price}
-        variant="contained"
-        sx={{
-          color: "#ffffff",
-          backgroundColor: "#1A237E",
-          padding: "0.8rem",
-          fontWeight: "bold",
-          fontSize: "14px",
-          borderRadius: "8px",
-          "&:hover": {
-            backgroundColor: "#0D1460",
-            cursor: "pointer",
-          },
-        }}
-      >
-        PUBLISH PRODUCT
-      </Button>
-    </Paper>
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+        <DialogTitle sx={{ fontWeight: "bold", fontSize: "1.5rem", borderBottom: "1px solid #eee" }}>
+            {productToEdit ? "Edit Product" : "Add New Product"}
+        </DialogTitle>
+        <DialogContent>
+            <Box display="flex" flexDirection="column" gap="1.5rem" mt="1.5rem">
+                <TextField 
+                    label="Product Name" 
+                    fullWidth
+                    onChange={(e) => setProductName(e.target.value)}
+                    value={productName}
+                />
+                <Box display="flex" gap="1rem">
+                    <TextField 
+                        label="Category" 
+                        fullWidth
+                        onChange={(e) => setCategory(e.target.value)}
+                        value={category}
+                    />
+                    <TextField 
+                        label="Price ($)" 
+                        type="number"
+                        fullWidth
+                        onChange={(e) => setPrice(e.target.value)}
+                        value={price}
+                    />
+                </Box>
+                <TextField 
+                    label="Image URL" 
+                    fullWidth
+                    onChange={(e) => setImage(e.target.value)}
+                    value={image}
+                    placeholder="https://..."
+                />
+                <TextField 
+                    label="Description"
+                    multiline
+                    rows={4}
+                    fullWidth
+                    onChange={(e) => setDescription(e.target.value)}
+                    value={description}
+                />
+            </Box>
+        </DialogContent>
+        <DialogActions sx={{ p: 3, borderTop: "1px solid #eee" }}>
+            <Button onClick={onClose} color="inherit" sx={{ mr: 1 }}>Cancel</Button>
+            <Button 
+                onClick={handleSubmit} 
+                variant="contained" 
+                disabled={!productName || !price}
+                sx={{ 
+                    bgcolor: palette.primary.main, 
+                    color: "white",
+                    px: 4,
+                    "&:hover": { bgcolor: palette.primary.dark }
+                }}
+            >
+                {productToEdit ? "Update" : "Publish"}
+            </Button>
+        </DialogActions>
+    </Dialog>
   );
 };
 

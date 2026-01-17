@@ -1,16 +1,26 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom"; 
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { useMemo } from "react";
-import { useSelector } from "react-redux";
 import LoginPage from "./scenes/loginPage";
 import HomePage from "./scenes/homePage"; 
 import CartMenu from "./scenes/global/CartMenu"; 
 import Checkout from "./scenes/checkout/Checkout";
 import ProductDetails from "./scenes/productDetails/ProductDetails";
 import OrdersPage from "./scenes/orders/OrdersPage";
-import Footer from "./scenes/global/Footer";
+import Footer from "./scenes/global/Footer"; 
+
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+const FooterDisplay = () => {
+  const location = useLocation();
+  
+  if (location.pathname.startsWith("/product/")) {
+    return null;
+  }
+
+  return <Footer />;
+};
 
 function App() {
   const theme = useMemo(() => createTheme({
@@ -35,7 +45,7 @@ function App() {
         light: "#F1F5F9"
       },
       background: {
-        default: "#f6f6f6",
+        default: "#ccced0",
         alt: "#FFFFFF" 
       },
       action: {
@@ -65,13 +75,6 @@ function App() {
           <ToastContainer 
             position="bottom-left" 
             autoClose={3000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
             theme="colored"
           />
 
@@ -84,7 +87,9 @@ function App() {
             <Route path="/orders" element={<OrdersPage />} />
             <Route path="/" element={<HomePage />} />
           </Routes>
-          <Footer />
+
+          <FooterDisplay />
+
         </ThemeProvider>
       </BrowserRouter>
     </div>

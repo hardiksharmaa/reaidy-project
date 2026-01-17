@@ -81,10 +81,10 @@ const Footer = () => {
       <Box 
         width="80%" 
         margin="auto" 
-        mt="40px" 
+        mt="20px" 
         textAlign="center"
       >
-          <Typography variant="caption" color="text.secondary">
+          <Typography variant="h6" color="text.secondary">
             © {new Date().getFullYear()} ReaidyStore. All Rights Reserved.
           </Typography>
       </Box>
